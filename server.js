@@ -1,6 +1,7 @@
 require('dotenv').config()
 // env  DATABASE_URL=mongodb://localhost/task
 let express = require('express')
+const { JsonWebTokenError } = require('jsonwebtoken')
 let app = express()
 const mongoose = require('mongoose')
 
@@ -12,6 +13,6 @@ db.once('open', (error) => console.log('Connection to Database'))
 app.use(express.json())
 
 const UsersRouter = require('./routes/user')
-app.use('/users',UsersRouter)
+app.use('/users', UsersRouter)
 
 app.listen(13000, () => console.log('Server Started'))

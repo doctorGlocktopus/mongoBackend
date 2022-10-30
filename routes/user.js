@@ -1,19 +1,19 @@
 const express = require('express')
 const router = express.Router()
 const User = require('../models/user')
-
-//bycrypt
+var jwt = require('jsonwebtoken');
 const bycrypt = require('bcrypt');
-const saltRounds = 10;
-const myPlaintextPassword = 's0/\/\P4$$w0rD';
-const someOtherPlaintextPassword = 'not_bacon';
+
 
 // login User
 router.post('/login', async (req, res) => {
     const user = await User.findOne({username: req.body.username})
     const match = await bycrypt.compare(req.body.password, user.password);
     if(match) {
-        res.status(200).send([match])
+        const username = req.body.username
+        const user = { name: username}
+        const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET)
+        res.status(200).send({ accessToken: token})
     }
 })
 
