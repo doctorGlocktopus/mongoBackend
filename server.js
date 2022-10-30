@@ -1,5 +1,5 @@
 require('dotenv').config()
-// env  DATABASE_URL=mongodb://localhost/task
+// env  DATABASE_URL=mongodb://localhost/task  also mOngoDB datenbank mit compas erstellen
 let express = require('express')
 const { JsonWebTokenError } = require('jsonwebtoken')
 let app = express()
