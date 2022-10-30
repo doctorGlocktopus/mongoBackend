@@ -7,14 +7,21 @@ const bycrypt = require('bcrypt');
 
 // login User
 router.post('/login', async (req, res) => {
-    const user = await User.findOne({username: req.body.username})
-    const match = await bycrypt.compare(req.body.password, user.password);
-    if(match) {
-        const username = req.body.username
-        const user = { username: username}
-        const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET)
-        res.status(200).send({ user: user, accessToken: token})
+    try {
+        const user = await User.findOne({username: req.body.username})
+        const match = await bycrypt.compare(req.body.password, user.password);
+        if(match) {
+            const username = req.body.username
+            const user = { username: username}
+            const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET)
+            res.status(200).send({ user: user, accessToken: token})
+        }
+    } catch(err) {
+        res.status(500).json({ message: err.message})
     }
+    
+    
+
 })
 
 // Getting all
