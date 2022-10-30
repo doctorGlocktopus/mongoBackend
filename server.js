@@ -10,7 +10,7 @@ db.on('error', (error) => console.error(error))
 db.once('open', (error) => console.log('Connection to Database'))
 
 app.use(express.json())
-s
+
 const UsersRouter = require('./routes/user')
 app.use('/users',UsersRouter)
 
