@@ -11,9 +11,9 @@ router.post('/login', async (req, res) => {
     const match = await bycrypt.compare(req.body.password, user.password);
     if(match) {
         const username = req.body.username
-        const user = { name: username}
+        const user = { username: username}
         const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET)
-        res.status(200).send({ accessToken: token})
+        res.status(200).send({ user: user, accessToken: token})
     }
 })
 
