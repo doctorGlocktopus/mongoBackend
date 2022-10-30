@@ -1,0 +1,42 @@
+
+//Rest Client
+//allID
+GET http://localhost:13000/users
+
+######
+//byID
+GET http://localhost:13000/users/
+
+####
+// also createn funktioniert aber suchen noch nicht
+POST http://localhost:13000/users
+Content-Type: application/json
+
+{
+    "username": "Jan",
+    "password": "jasmin12"
+}
+
+
+###
+DELETE http://localhost:13000/users/635e9ec81dcd1606048d4c3e
+
+
+###
+
+PATCH http://localhost:13000/users/635ea0a66690180a2a9ea2be
+Content-Type: application/json
+
+{
+    "username": "Timbooooo"
+}
+
+###
+
+POST http://localhost:13000/users/login
+Content-Type: application/json
+
+{
+    "username": "Jan",
+    "password": "jasmin12"
+}

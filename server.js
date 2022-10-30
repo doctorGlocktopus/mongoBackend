@@ -1,0 +1,17 @@
+require('dotenv').config()
+// env  DATABASE_URL=mongodb://localhost/task
+let express = require('express')
+let app = express()
+const mongoose = require('mongoose')
+
+mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true })
+const db = mongoose.connection
+db.on('error', (error) => console.error(error))
+db.once('open', (error) => console.log('Connection to Database'))
+
+app.use(express.json())
+s
+const UsersRouter = require('./routes/user')
+app.use('/users',UsersRouter)
+
+app.listen(13000, () => console.log('Server Started'))
