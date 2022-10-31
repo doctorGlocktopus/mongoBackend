@@ -15,4 +15,7 @@ app.use(express.json())
 const UsersRouter = require('./routes/user')
 app.use('/users', UsersRouter)
 
+const TasksRouter = require('./routes/task')
+app.use('/tasks', TasksRouter)
+
 app.listen(13000, () => console.log('Server Started'))
