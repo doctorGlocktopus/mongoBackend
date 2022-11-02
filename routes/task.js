@@ -7,10 +7,10 @@ const bycrypt = require('bcrypt');
 // Getting all
 router.get('/', async (req, res) => {
     try {
-        const tasks = await Task.find()
+        const tasks = await Task.find().populate("user_id", { password: false })
         res.json(tasks)
     } catch (err) {
-        res.status(500).json({ message: err.message})
+        res.status(500).json({ message: err.message })
     }
 })
 
@@ -21,7 +21,7 @@ router.get('/:id', getTask, (req, res) => {
 
 // Create one
 router.post('/', async (req, res) => {
-    const task = new Task ({
+    const task = new Task({
         title: req.body.title,
         text: req.body.text,
         done: 0,
@@ -31,16 +31,16 @@ router.post('/', async (req, res) => {
         const newTask = await task.save()
         res.status(201).json(newTask)
     } catch (err) {
-        res.status(400).json( {message: err.message})
+        res.status(400).json({ message: err.message })
     }
 })
 
 // Updating one
 router.patch('/:id', getTask, async (req, res) => {
-    if(req.body.title != null) {
+    if (req.body.title != null) {
         res.user.title = req.body.title
     }
-    if(req.body.text != null) {
+    if (req.body.text != null) {
         res.user.text = req.body.text
     }
     try {
@@ -52,11 +52,11 @@ router.patch('/:id', getTask, async (req, res) => {
 })
 
 // Delete one
-router.delete('/:id', getTask, async(req, res) => {
+router.delete('/:id', getTask, async (req, res) => {
     try {
         await res.task.remove()
     } catch (err) {
-        res.status(500).json({ message :err.message })
+        res.status(500).json({ message: err.message })
     }
 })
 
@@ -66,10 +66,10 @@ async function getTask(req, res, next) {
     try {
         task = await Task.findById(req.params.id)
         if (task == null) {
-            return res.status(404).json({ message: 'Cannot find task'})
+            return res.status(404).json({ message: 'Cannot find task' })
         }
     } catch (err) {
-        return res.status(500).json({ message: err.message})
+        return res.status(500).json({ message: err.message })
     }
     res.task = task
     next()

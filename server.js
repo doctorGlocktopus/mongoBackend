@@ -4,6 +4,8 @@ let express = require('express')
 const { JsonWebTokenError } = require('jsonwebtoken')
 let app = express()
 const mongoose = require('mongoose')
+var cors = require('cors')
+app.use(cors())
 
 mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true })
 const db = mongoose.connection

@@ -8,19 +8,21 @@ const bycrypt = require('bcrypt');
 // login User
 router.post('/login', async (req, res) => {
     try {
-        const user = await User.findOne({username: req.body.username})
+        const user = await User.findOne({ username: req.body.username })
         const match = await bycrypt.compare(req.body.password, user.password);
-        if(match) {
+        if (match) {
             const username = req.body.username
             const newUser = {
                 _id: user._id,
                 username: username
             }
             const token = jwt.sign(newUser, process.env.ACCESS_TOKEN_SECRET)
-            res.status(200).send({ user: newUser, accessToken: token})
+            res.status(200).send({ user: newUser, accessToken: token })
+        } else {
+            res.status(400).send()
         }
-    } catch(err) {
-        res.status(500).json({ message: err.message})
+    } catch (err) {
+        res.status(500).json({ message: err.message })
     }
 })
 
@@ -30,7 +32,7 @@ router.get('/', async (req, res) => {
         const user = await User.find()
         res.json(user)
     } catch (err) {
-        res.status(500).json({ message: err.message})
+        res.status(500).json({ message: err.message })
     }
 })
 
@@ -41,9 +43,9 @@ router.get('/:id', getUser, (req, res) => {
 
 // Create one
 router.post('/', async (req, res) => {
-    const usernameCheck = await User.findOne({username: req.body.username})
-    if(!usernameCheck) {
-        const user = new User ({
+    const usernameCheck = await User.findOne({ username: req.body.username })
+    if (!usernameCheck) {
+        const user = new User({
             username: req.body.username,
             password: await bycrypt.hash(req.body.password, 10)
         })
@@ -51,19 +53,19 @@ router.post('/', async (req, res) => {
             const newUser = await user.save()
             res.status(201).json(newUser)
         } catch (err) {
-            res.status(400).json( {message: err.message})
+            res.status(400).json({ message: err.message })
         }
     } else {
-        res.status(400).json( {message: "Benutzername ist schon vergeben"})
+        res.status(400).json({ message: "Benutzername ist schon vergeben" })
     }
 })
 
 // Updating one
 router.patch('/:id', getUser, async (req, res) => {
-    if(req.body.username != null) {
+    if (req.body.username != null) {
         res.user.username = req.body.username
     }
-    if(req.body.password != null) {
+    if (req.body.password != null) {
         res.user.password = req.body.password
     }
     try {
@@ -75,11 +77,11 @@ router.patch('/:id', getUser, async (req, res) => {
 })
 
 // Delete one
-router.delete('/:id', getUser, async(req, res) => {
+router.delete('/:id', getUser, async (req, res) => {
     try {
         await res.user.remove()
     } catch (err) {
-        res.status(500).json({ message :err.message })
+        res.status(500).json({ message: err.message })
     }
 })
 
@@ -88,10 +90,10 @@ async function getUser(req, res, next) {
     try {
         user = await User.findById(req.params.id)
         if (user == null) {
-            return res.status(404).json({ message: 'Cannot find user'})
+            return res.status(404).json({ message: 'Cannot find user' })
         }
     } catch (err) {
-        return res.status(500).json({ message: err.message})
+        return res.status(500).json({ message: err.message })
     }
     res.user = user
     next()
