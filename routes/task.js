@@ -2,12 +2,13 @@ const express = require('express')
 const router = express.Router()
 const Task = require('../models/task')
 const bycrypt = require('bcrypt');
-
+const { authUser } = require("../basicAuth")
 
 // Getting all
-router.get('/', async (req, res) => {
+router.get('/', authUser, async (req, res) => {
+    const auth = req.get("auth")
     try {
-        const tasks = await Task.find().populate("user_id", { password: false })
+        const tasks = await Task.find({user_id: auth}).populate("user_id", { password: false})
         res.json(tasks)
     } catch (err) {
         res.status(500).json({ message: err.message })
@@ -15,7 +16,7 @@ router.get('/', async (req, res) => {
 })
 
 // Getting one
-router.get('/:id', getTask, (req, res) => {
+router.get('/:id', authUser, getTask, (req, res) => {
     res.send(res.task)
 })
 
@@ -36,7 +37,7 @@ router.post('/', async (req, res) => {
 })
 
 // Updating one
-router.patch('/:id', getTask, async (req, res) => {
+router.patch('/:id', authUser, getTask, async (req, res) => {
     if (req.body.title != null) {
         res.user.title = req.body.title
     }
@@ -52,7 +53,7 @@ router.patch('/:id', getTask, async (req, res) => {
 })
 
 // Delete one
-router.delete('/:id', getTask, async (req, res) => {
+router.delete('/:id', authUser, getTask, async (req, res) => {
     try {
         await res.task.remove()
     } catch (err) {

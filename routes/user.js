@@ -3,7 +3,7 @@ const router = express.Router()
 const User = require('../models/user')
 var jwt = require('jsonwebtoken');
 const bycrypt = require('bcrypt');
-
+const { authUser } = require("../basicAuth")
 
 // login User
 router.post('/login', async (req, res) => {
@@ -27,7 +27,7 @@ router.post('/login', async (req, res) => {
 })
 
 // Getting all
-router.get('/', async (req, res) => {
+router.get('/',  async (req, res) => {
     try {
         const user = await User.find()
         res.json(user)
@@ -37,7 +37,7 @@ router.get('/', async (req, res) => {
 })
 
 // Getting one
-router.get('/:id', getUser, (req, res) => {
+router.get('/:id', authUser, getUser, (req, res) => {
     res.send(res.user)
 })
 
@@ -61,7 +61,7 @@ router.post('/', async (req, res) => {
 })
 
 // Updating one
-router.patch('/:id', getUser, async (req, res) => {
+router.patch('/:id', authUser, getUser, async (req, res) => {
     if (req.body.username != null) {
         res.user.username = req.body.username
     }
@@ -77,7 +77,7 @@ router.patch('/:id', getUser, async (req, res) => {
 })
 
 // Delete one
-router.delete('/:id', getUser, async (req, res) => {
+router.delete('/:id', authUser, getUser, async (req, res) => {
     try {
         await res.user.remove()
     } catch (err) {

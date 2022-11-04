@@ -5,7 +5,7 @@ GET http://localhost:13000/users
 
 ######
 //byID
-GET http://localhost:13000/users/635f989f83a8d9ef9c071691
+GET http://localhost:13000/users/6364cbadbd4aee987d8fed92
 
 ####
 // also createn funktioniert aber suchen noch nicht
@@ -37,7 +37,7 @@ POST http://localhost:13000/users/login
 Content-Type: application/json
 
 {
-    "username": "Jan",
+    "username": "jan",
     "password": "jasmin12"
 }
 
@@ -60,4 +60,4 @@ Content-Type: application/json
 }
 
 ### delete task
-DELETE http://localhost:13000/tasks/635f9ffa0de69ef438268181
+DELETE http://localhost:13000/tasks/6364e0f2ee9d89f3cb89fa2a
