@@ -27,7 +27,7 @@ router.post('/login', async (req, res) => {
 })
 
 // Getting all
-router.get('/',  async (req, res) => {
+router.get('/', authUser, async (req, res) => {
     try {
         const user = await User.find()
         res.json(user)
