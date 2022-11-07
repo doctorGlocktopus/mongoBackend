@@ -3,7 +3,6 @@ var jwt = require('jsonwebtoken');
 
 async function authUser(req, res, next) {
     user = await User.findById(req.get("auth"))
-
     if(user) {
         next()
     } else {
