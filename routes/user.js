@@ -99,8 +99,8 @@ async function getUser(req, res, next) {
     next()
 }
 
-router.post('/auth', function (req, res) {
-    var decoded = jwt.verify(req.body.auth, process.env.ACCESS_TOKEN_SECRET)
+router.get('/auth', function (req, res) {
+    var decoded = jwt.verify(req.body, process.env.ACCESS_TOKEN_SECRET)
     if (User.findOne({ username: decoded.username })) {
         res.send(decoded)
     }
