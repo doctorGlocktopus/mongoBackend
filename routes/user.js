@@ -16,7 +16,7 @@ router.post('/login', async (req, res) => {
                 _id: user._id,
                 username: username
             }
-            const token = jwt.sign(newUser, process.env.ACCESS_TOKEN_SECRET)
+            const token = jwt.sign(newUser, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1d' })
             res.status(200).send({ user: newUser, accessToken: token })
         } else {
             res.status(400).send()
@@ -37,7 +37,7 @@ router.get('/', async (req, res) => {
 })
 
 // Getting one
-router.get('/:id', authUser, getUser, (req, res) => {
+router.get('/:id',  getUser, (req, res) => {
     res.send(res.user)
 })
 
@@ -88,7 +88,7 @@ router.delete('/:id', authUser, getUser, async (req, res) => {
 // getUser Funktion
 async function getUser(req, res, next) {
     try {
-        user = await User.findById(req.params.id)
+        user = await User.findById(req.params.id).select(['username', 'admin'])
         if (user == null) {
             return res.status(404).json({ message: 'Cannot find user' })
         }
