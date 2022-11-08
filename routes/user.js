@@ -99,4 +99,11 @@ async function getUser(req, res, next) {
     next()
 }
 
+router.post('/auth', function (req, res) {
+    var decoded = jwt.verify(req.body.auth, process.env.ACCESS_TOKEN_SECRET)
+    if (User.findOne({ username: decoded.username })) {
+        res.send(decoded)
+    }
+})
+
 module.exports = router
