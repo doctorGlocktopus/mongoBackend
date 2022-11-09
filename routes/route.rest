@@ -1,5 +1,11 @@
+//allID
+POST http://localhost:13000/users/auth
+Content-Type: application/json
 
-//Rest Client
+{
+    "auth": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzYyNTUwMjlhMWZlNzBiYzAyYTZhNTgiLCJ1c2VybmFtZSI6ImphbiIsImlhdCI6MTY2NzkxNDk3NiwiZXhwIjoxNjY4MDAxMzc2fQ.gbrmt1Hd72Dy4xm4HZHfLyKziVbKwOxsFb8Vvuwt23I"
+}
+######
 //allID
 GET http://localhost:13000/users
 

@@ -16,7 +16,7 @@ router.post('/login', async (req, res) => {
                 _id: user._id,
                 username: username
             }
-            const token = jwt.sign(newUser, process.env.ACCESS_TOKEN_SECRET)
+            const token = jwt.sign(newUser, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1d' })
             res.status(200).send({ user: newUser, accessToken: token })
         } else {
             res.status(400).send()
@@ -27,9 +27,9 @@ router.post('/login', async (req, res) => {
 })
 
 // Getting all
-router.get('/', authUser, async (req, res) => {
+router.get('/', async (req, res) => {
     try {
-        const user = await User.find()
+        const user = await User.find().select('username')
         res.json(user)
     } catch (err) {
         res.status(500).json({ message: err.message })
@@ -37,7 +37,7 @@ router.get('/', authUser, async (req, res) => {
 })
 
 // Getting one
-router.get('/:id', authUser, getUser, (req, res) => {
+router.get('/:id',  getUser, (req, res) => {
     res.send(res.user)
 })
 
@@ -88,7 +88,7 @@ router.delete('/:id', authUser, getUser, async (req, res) => {
 // getUser Funktion
 async function getUser(req, res, next) {
     try {
-        user = await User.findById(req.params.id)
+        user = await User.findById(req.params.id).select(['username', 'admin'])
         if (user == null) {
             return res.status(404).json({ message: 'Cannot find user' })
         }
@@ -98,5 +98,12 @@ async function getUser(req, res, next) {
     res.user = user
     next()
 }
+
+router.get('/auth', function (req, res) {
+    var decoded = jwt.verify(req.body, process.env.ACCESS_TOKEN_SECRET)
+    if (User.findOne({ username: decoded.username })) {
+        res.send(decoded)
+    }
+})
 
 module.exports = router
