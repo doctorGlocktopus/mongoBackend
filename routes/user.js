@@ -1,9 +1,13 @@
 const express = require('express')
 const router = express.Router()
 const User = require('../models/user')
-var jwt = require('jsonwebtoken');
-const bycrypt = require('bcrypt');
+const bycrypt = require('bcrypt')
 const { authUser } = require("../basicAuth")
+const jose = require("jose")
+
+const string = process.env.ACCESS_TOKEN_PRIVAT.replace(/\[LINEBREAK\]/g, "\n")
+const ecPrivateKey = jose.importPKCS8(string, "RS256")
+
 
 // login User
 router.post('/login', async (req, res) => {
@@ -16,8 +20,18 @@ router.post('/login', async (req, res) => {
                 _id: user._id,
                 username: username
             }
-            const token = jwt.sign(newUser, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1d' })
-            res.status(200).send({ user: newUser, accessToken: token })
+
+            const token = await new jose.SignJWT(newUser)
+                .setProtectedHeader({ alg: "RS256" })
+                .setIssuedAt()
+                .setIssuer('urn:example:issuer')
+                .setAudience('urn:example:audience')
+                .setExpirationTime('2h')
+                .sign(await ecPrivateKey)
+
+            res.status(200).send({
+                user: newUser, accessToken: token,
+            })
         } else {
             res.status(400).send()
         }
@@ -37,7 +51,7 @@ router.get('/', async (req, res) => {
 })
 
 // Getting one
-router.get('/:id',  getUser, (req, res) => {
+router.get('/:id', getUser, (req, res) => {
     res.send(res.user)
 })
 
