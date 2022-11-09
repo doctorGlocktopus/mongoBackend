@@ -29,6 +29,7 @@ router.post('/login', async (req, res) => {
                 .setExpirationTime('2h')
                 .sign(await ecPrivateKey)
 
+
             res.status(200).send({
                 user: newUser, accessToken: token,
             })
@@ -43,7 +44,7 @@ router.post('/login', async (req, res) => {
 // Getting all
 router.get('/', async (req, res) => {
     try {
-        const user = await User.find().select('username')
+        const user = await User.find().select(['username', 'admin'])
         res.json(user)
     } catch (err) {
         res.status(500).json({ message: err.message })
@@ -61,7 +62,8 @@ router.post('/', async (req, res) => {
     if (!usernameCheck) {
         const user = new User({
             username: req.body.username,
-            password: await bycrypt.hash(req.body.password, 10)
+            password: await bycrypt.hash(req.body.password, 10),
+            admin: req.body.admin
         })
         try {
             const newUser = await user.save()
@@ -91,7 +93,7 @@ router.patch('/:id', authUser, getUser, async (req, res) => {
 })
 
 // Delete one
-router.delete('/:id', authUser, getUser, async (req, res) => {
+router.delete('/:id', getUser, async (req, res) => {
     try {
         await res.user.remove()
     } catch (err) {

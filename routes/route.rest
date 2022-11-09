@@ -19,13 +19,14 @@ POST http://localhost:13000/users
 Content-Type: application/json
 
 {
-    "username": "testdft",
-    "password": "jasmin12"
+    "username": "testssdfdt",
+    "password": "jasmin12",
+    "admin": 1
 }
 
 
 ###
-DELETE http://localhost:13000/users/635e9ec81dcd1606048d4c3e
+DELETE http://localhost:13000/users/636bbf04183359e7b6155247
 
 
 ###
