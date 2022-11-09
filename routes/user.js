@@ -7,6 +7,7 @@ const jose = require("jose")
 
 const string = process.env.ACCESS_TOKEN_PRIVAT.replace(/\[LINEBREAK\]/g, "\n")
 const ecPrivateKey = jose.importPKCS8(string, "RS256")
+//const publicKey = process.env.ACCESS_TOKEN_PUBLIC.replace(/\[LINEBREAK\]/g, "\n")
 
 
 // login User
@@ -28,7 +29,6 @@ router.post('/login', async (req, res) => {
                 .setAudience('urn:example:audience')
                 .setExpirationTime('2h')
                 .sign(await ecPrivateKey)
-
 
             res.status(200).send({
                 user: newUser, accessToken: token,
