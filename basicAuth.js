@@ -1,6 +1,5 @@
 const User = require('./models/user')
 
-
 async function authUser(req, res, next) {
     user = await User.findById(req.get("auth"))
     if (user) {

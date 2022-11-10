@@ -17,16 +17,16 @@ router.post('/login', async (req, res) => {
         const match = await bycrypt.compare(req.body.password, user.password);
         if (match) {
             const username = req.body.username
+            const admin = req.body.admin
             const newUser = {
                 _id: user._id,
-                username: username
+                username: username,
+                admin: user.admin
             }
 
             const token = await new jose.SignJWT(newUser)
                 .setProtectedHeader({ alg: "RS256" })
                 .setIssuedAt()
-                .setIssuer('urn:example:issuer')
-                .setAudience('urn:example:audience')
                 .setExpirationTime('2h')
                 .sign(await ecPrivateKey)
 
