@@ -38,12 +38,18 @@ router.post('/', async (req, res) => {
 
 // Updating one
 router.patch('/:id', authUser, getTask, async (req, res) => {
+
     if (req.body.title != null) {
-        res.user.title = req.body.title
+        res.task.title = req.body.title
     }
     if (req.body.text != null) {
-        res.user.text = req.body.text
+        res.task.text = req.body.text
     }
+    if (req.body.done != null) {
+        res.task.done = !req.body.done
+    }
+
+    console.log(1)
     try {
         const updatedTask = await res.task.save()
         res.json(updatedTask)
@@ -54,7 +60,6 @@ router.patch('/:id', authUser, getTask, async (req, res) => {
 
 // Delete one
 router.delete('/:id', getTask, async (req, res) => {
-    res.status(500).json({ message: "dasdasd" })
     try {
         await res.task.remove()
     } catch (err) {
