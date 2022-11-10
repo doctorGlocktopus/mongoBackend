@@ -8,7 +8,7 @@ const { authUser } = require("../basicAuth")
 router.get('/', authUser, async (req, res) => {
     const auth = req.get("auth")
     try {
-        const tasks = await Task.find({user_id: auth}).populate("user_id", { password: false})
+        const tasks = await Task.find({ user_id: auth }).populate("user_id", { password: false })
         res.json(tasks)
     } catch (err) {
         res.status(500).json({ message: err.message })
@@ -53,7 +53,8 @@ router.patch('/:id', authUser, getTask, async (req, res) => {
 })
 
 // Delete one
-router.delete('/:id', authUser, getTask, async (req, res) => {
+router.delete('/:id', getTask, async (req, res) => {
+    res.status(500).json({ message: "dasdasd" })
     try {
         await res.task.remove()
     } catch (err) {

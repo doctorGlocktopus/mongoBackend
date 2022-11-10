@@ -94,6 +94,7 @@ router.patch('/:id', authUser, getUser, async (req, res) => {
 
 // Delete one
 router.delete('/:id', getUser, async (req, res) => {
+
     try {
         await res.user.remove()
     } catch (err) {
