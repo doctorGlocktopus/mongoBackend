@@ -46,10 +46,9 @@ router.patch('/:id', authUser, getTask, async (req, res) => {
         res.task.text = req.body.text
     }
     if (req.body.done != null) {
-        res.task.done = !req.body.done
+        res.task.done = !res.task.done
     }
 
-    console.log(1)
     try {
         const updatedTask = await res.task.save()
         res.json(updatedTask)
