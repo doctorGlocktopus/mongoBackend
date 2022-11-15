@@ -6,9 +6,8 @@ const { authUser } = require("../basicAuth")
 
 // Getting all
 router.get('/', authUser, async (req, res) => {
-    const auth = req.get("auth")
     try {
-        const tasks = await Task.find({ user_id: auth }).populate("user_id", { password: false })
+        const tasks = await Task.find({ user_id: req.user._id }).populate("user_id", { password: false })
         res.json(tasks)
     } catch (err) {
         res.status(500).json({ message: err.message })
@@ -21,12 +20,13 @@ router.get('/:id', authUser, getTask, (req, res) => {
 })
 
 // Create one
-router.post('/', async (req, res) => {
+router.post('/', authUser, async (req, res) => {
+    let user_id = req.user + ""
     const task = new Task({
         title: req.body.title,
         text: req.body.text,
         done: 0,
-        user_id: req.body.user_id,
+        user_id: user_id,
     })
     try {
         const newTask = await task.save()
@@ -58,7 +58,7 @@ router.patch('/:id', authUser, getTask, async (req, res) => {
 })
 
 // Delete one
-router.delete('/:id', getTask, async (req, res) => {
+router.delete('/:id', authUser, getTask, async (req, res) => {
     try {
         await res.task.remove()
     } catch (err) {
@@ -67,18 +67,20 @@ router.delete('/:id', getTask, async (req, res) => {
 })
 
 
-
 async function getTask(req, res, next) {
+    let task;
+    let _id = req.params.id
     try {
-        task = await Task.findById(req.params.id)
+        task = await Task.findById(_id)
         if (task == null) {
             return res.status(404).json({ message: 'Cannot find task' })
         }
+
     } catch (err) {
         return res.status(500).json({ message: err.message })
     }
-    res.task = task
-    next()
+    res.task = task;
+    next();
 }
 
 module.exports = router
