@@ -1,0 +1,13 @@
+{
+    "ignorePatterns": [
+    ],
+    "extends": [
+        "eslint-config-ape"
+    ],
+    "settings": {
+        "next": {
+        },
+        "tailwindcss": {
+        }
+    }
+}
