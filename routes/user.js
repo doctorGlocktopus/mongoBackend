@@ -64,6 +64,7 @@ router.post('/', async (req, res) => {
         const user = new User({
             username: req.body.username,
             password: await bycrypt.hash(req.body.password, 10),
+            email: req.body.email,
             admin: req.body.admin,
         });
         try {
