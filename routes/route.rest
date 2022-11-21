@@ -52,7 +52,6 @@ Content-Type: application/json
 //get all task
 GET http://localhost:13000/tasks/
 Content-Type: application/xml
-auth: 635f989f83a8d9ef9c071691
 
 ###
 //create task

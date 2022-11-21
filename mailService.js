@@ -3,20 +3,24 @@ const Task = require('./models/task');
 const Mailjet = require('node-mailjet');
 require('dotenv').config();
 
+const mailjet = Mailjet.apiConnect(process.env.PUBLICMAIL,
+    process.env.PRIVATEMAIL,
+    {
+        config: {},
+        options: {},
+    });
+
 // cron.schedule('* * * * * * ', async function () { // jede Sekunde
 cron.schedule('59 23 * * 3', async function () { // immer 59minuten, 23stunden, 0Tage, 0WOchen, dritter WOchentag
     console.log('---------------------');
     console.log('Running Cron Job');
-    const tasks = await Task.find({done: false}).populate("user_id", {password: false});
+    const tasks = await Task.find({
+        done: false,
+        updated_at: {$lte:new Date(Date.now() - (1000 * 60 * 24))},
+    }).populate("user_id", {password: false});
     if (tasks != []) {
         tasks.forEach(task => {
             if (task.done === false) {
-                const mailjet = Mailjet.apiConnect(process.env.PUBLICMAIL,
-                    process.env.PRIVATEMAIL,
-                    {
-                        config: {},
-                        options: {},
-                    });
                 const request = mailjet
                     .post('send', {version: 'v3.1'})
                     .request({
